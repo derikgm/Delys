@@ -10,7 +10,7 @@ import { Component } from '@angular/core';
           <!-- Logo -->
           <div class="flex items-center gap-2 text-2xl font-bold">
             <i class="fas fa-home"></i>
-            <span>DOMUS</span>
+            <span>Delys</span>
           </div>
 
           <!-- Redes Sociales -->
