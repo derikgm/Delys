@@ -9,13 +9,13 @@ import { Component, signal } from '@angular/core';
         <!-- Logo -->
         <a href="#inicio" class="flex items-center gap-2 text-2xl font-bold text-domus-primary">
           <i class="fas fa-home"></i>
-          <span>DOMUS</span>
+          <span>DELYS</span>
         </a>
 
         <!-- Menú Desktop -->
-        <ul class="hidden md:flex gap-8 text-domus-primary font-medium">
+        <ul class="hidden md:flex gap-6 text-domus-primary font-medium">
           @for (item of menuItems; track item.id) {
-            <li>
+            <li class="rounded hover:bg-gray-200 px-2 py-2">
               <a [href]="'#' + item.id" 
                  (click)="scrollTo(item.id)"
                  class="hover:text-domus-accent transition-colors">
@@ -54,12 +54,10 @@ export class HeaderComponent {
   menuOpen = signal(false);
   
   menuItems = [
-    { id: 'inicio', label: 'Inicio' },
-    { id: 'nosotros', label: 'Nosotros' },
-    { id: 'servicios', label: 'Servicios' },
-    { id: 'tienda', label: 'Tienda' },
-    { id: 'galeria', label: 'Galería' },
-    { id: 'contacto', label: 'Contacto' }
+    { id: 'productos', label: 'Productos' },
+    { id: 'encargo', label: 'Encarge su dulce' },
+    { id: 'radicamos', label: 'Lugar' },
+    { id: 'contacto', label: 'contacto' },
   ];
 
   toggleMenu() {

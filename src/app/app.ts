@@ -14,7 +14,7 @@ import { WhatsAppButtonComponent } from './components/whatsapp-button.component'
       <app-home-page />
     </main>
     <app-footer />
-    <app-whatsapp-button />
+    <!-- <app-whatsapp-button /> -->
   `
 })
 export class App {}

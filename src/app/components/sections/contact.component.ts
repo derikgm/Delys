@@ -39,44 +39,6 @@ import { matWhatsappOutline, matMailOutline, matMapOutline, matPhoneOutline} fro
               </div>
             }
           </div>
-
-          <!-- Formulario -->
-          <div class="bg-domus-light p-6 rounded-lg shadow-md">
-            <h3 class="text-2xl font-bold text-domus-primary mb-4">Envíanos un mensaje</h3>
-            <form action="mailto:info@domus.mx" 
-                  method="post" 
-                  enctype="text/plain" 
-                  class="space-y-4">
-              <div>
-                <label for="nombre" class="block text-domus-primary font-medium mb-1">Nombre</label>
-                <input type="text" 
-                       id="nombre" 
-                       name="nombre" 
-                       required
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-domus-accent focus:outline-none">
-              </div>
-              <div>
-                <label for="correo" class="block text-domus-primary font-medium mb-1">Correo</label>
-                <input type="email" 
-                       id="correo" 
-                       name="correo" 
-                       required
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-domus-accent focus:outline-none">
-              </div>
-              <div>
-                <label for="mensaje" class="block text-domus-primary font-medium mb-1">Mensaje</label>
-                <textarea id="mensaje" 
-                          name="mensaje" 
-                          rows="4" 
-                          required
-                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-domus-accent focus:outline-none"></textarea>
-              </div>
-              <button type="submit"
-                      class="w-full bg-domus-accent hover:bg-yellow-500 text-domus-primary font-bold py-3 rounded-lg transition-all flex items-center justify-center gap-2">
-                <i class="fas fa-paper-plane"></i> Enviar mensaje
-              </button>
-            </form>
-          </div>
         </div>
       </div>
     </section>

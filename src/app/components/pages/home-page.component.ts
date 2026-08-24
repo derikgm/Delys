@@ -4,6 +4,7 @@ import { AboutComponent } from '../sections/about.component';
 import { ContactComponent } from '../sections/contact.component';
 // import { GalleryComponent } from '../sections/gallery.component';
 import { ServicesComponent } from '../sections/services.component';
+import { CarruselComponent } from "../carrusel.component";
 // import { StoreComponent } from '../sections/store.component';
 
 @Component({
@@ -15,22 +16,19 @@ import { ServicesComponent } from '../sections/services.component';
     ServicesComponent,
     // StoreComponent,
     // GalleryComponent,
-    ContactComponent
-  ],
+    ContactComponent,
+    CarruselComponent
+],
   template: `
-    <section id="inicio">
-      <app-home />
+  <!-- Aqui va el carrucel -->
+    <section id="carrusel">
+      <carrusel-component />
     </section>
-    <section id="servicios">
+    <section id="encargo">
       <app-services />
     </section>
-    <!-- <section id="tienda">
-      <app-store />
-    </section>
-    <section id="galeria">
-      <app-gallery />
-    </section> -->
-    <section id="nosotros">
+
+    <section id="radicamos">
       <app-about />
     </section>
     <section id="contacto">
