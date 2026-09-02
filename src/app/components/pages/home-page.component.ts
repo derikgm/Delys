@@ -5,24 +5,29 @@ import { ContactComponent } from '../sections/contact.component';
 // import { GalleryComponent } from '../sections/gallery.component';
 import { ServicesComponent } from '../sections/services.component';
 import { CarruselComponent } from "../carrusel.component";
+import { ProductosComponent } from "../productos.component/productos.component";
 // import { StoreComponent } from '../sections/store.component';
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
   imports: [
-    HomeComponent,
+    // HomeComponent,
     AboutComponent,
     ServicesComponent,
     // StoreComponent,
     // GalleryComponent,
     ContactComponent,
-    CarruselComponent
+    CarruselComponent,
+    ProductosComponent
 ],
   template: `
   <!-- Aqui va el carrucel -->
     <section id="carrusel">
       <carrusel-component />
+    </section>
+    <section id="productos">
+      <productos-component />
     </section>
     <section id="encargo">
       <app-services />

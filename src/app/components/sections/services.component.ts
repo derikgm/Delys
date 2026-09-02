@@ -1,6 +1,8 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { Component, computed, ElementRef, OnInit, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
 import { provideIcons, NgIcon } from '@ng-icons/core';
 import { matAdd } from '@ng-icons/material-icons/baseline';
+import { Dulce, Encargo } from '../../interfaces/dulces.interfaces';
+import { tipos_de_dulces } from '../../common/dulces';
 
 @Component({
   selector: 'app-services',
@@ -62,12 +64,24 @@ import { matAdd } from '@ng-icons/material-icons/baseline';
                   <!-- Cantidad -->
                   <div class="flex w-full justify-between items-center">
                     <p class="font-medium select-none">Cantidad</p>
-                    <input 
+                    <input
+                      #cantidad_input
                       type="number" 
                       min="1" 
                       [value]="encargo.cantidad"
                       class="outline-2 rounded w-1/2 text-center px-2 py-1"
                       (input)="manejar_cambio_de_cantidad($index, $event.target)">
+                  </div>
+
+                  <!-- Precio por unidad -->
+                  <div class="flex w-full justify-between items-center">
+                    <p class="font-medium select-none">
+                      {{encargo.dulce.precio}} CUP / U
+                    </p>
+
+                    <p class="font-medium select-none">
+                      {{encargo.dulce.precio * +cantidad_input.value}} CUP / C
+                    </p>
                   </div>
                 </div>
               </div>
@@ -113,6 +127,7 @@ import { matAdd } from '@ng-icons/material-icons/baseline';
   imports: [NgIcon]
 })
 export class ServicesComponent implements OnInit {
+  // @ViewChildren('cantidad_input') cantidad_input!: QueryList<ElementRef<InputEvent>>;
 
   precio = computed<number>(() => {
     let precio = 0;
@@ -134,25 +149,25 @@ export class ServicesComponent implements OnInit {
     }])
   }
 // Método para cambiar el dulce seleccionado
-manejar_cambio_de_dulce(encargo_index: number, event: Event) {
-  const select = event.target as HTMLSelectElement;
-  const nombreDulce = select.value;
-  const dulceSeleccionado = this.tipos_de_dulces.find(d => d.nombre === nombreDulce);
-  
-  if (dulceSeleccionado) {
-    this.encargos.update((encargos) => {
-      return encargos.map((encargo, index) => {
-        if (index === encargo_index) {
-          return {
-            ...encargo,
-            dulce: dulceSeleccionado
-          };
-        }
-        return encargo;
+  manejar_cambio_de_dulce(encargo_index: number, event: Event) {
+    const select = event.target as HTMLSelectElement;
+    const nombreDulce = select.value;
+    const dulceSeleccionado = this.tipos_de_dulces.find(d => d.nombre === nombreDulce);
+    
+    if (dulceSeleccionado) {
+      this.encargos.update((encargos) => {
+        return encargos.map((encargo, index) => {
+          if (index === encargo_index) {
+            return {
+              ...encargo,
+              dulce: dulceSeleccionado
+            };
+          }
+          return encargo;
+        });
       });
-    });
+    }
   }
-}
 
   // Método para agregar un nuevo encargo
   agregar_encargo() {
@@ -185,30 +200,5 @@ manejar_cambio_de_dulce(encargo_index: number, event: Event) {
   }
 }
 
-export interface Dulce {
-  precio: number,
-  nombre: string,
-  rebaja?: number,
-  imagen?: string,
-}
 
-export interface Encargo {
-  dulce: Dulce,
-  cantidad: number,
-}
 
-//Tipos de dulces:
-let tipos_de_dulces: Dulce[] = [
-  {
-    precio: 4500,
-    nombre: 'Chocoflan con merenge'
-  },
-  {
-    precio: 2000,
-    nombre: 'Flan mediano (15 cm)'
-  },
-  {
-    precio: 3000,
-    nombre: 'Flan Grande (18 cm)'
-  },
-]

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal, HostListener } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { getImageUrl } from '../common/dulces';
 
 @Component({
   selector: 'carrusel-component',
@@ -88,21 +89,12 @@ export class CarruselComponent {
   
   // Signal para las imágenes
   images = signal<Array<{ id: number; url: string; alt: string }>>([
-    { id: 1, url: this.getImageUrl('cake (1).jpg'), alt: 'Pastel 1' },
-    { id: 2, url: this.getImageUrl('cake (2).jpg'), alt: 'Pastel 2' },
-    { id: 3, url: this.getImageUrl('cake (3).jpg'), alt: 'Pastel 3' },
-    { id: 4, url: this.getImageUrl('cake (4).jpg'), alt: 'Pastel 4' },
-    { id: 5, url: this.getImageUrl('cake (5).jpg'), alt: 'Pastel 5' }
+    { id: 1, url: getImageUrl('cake (1).jpg'), alt: 'Pastel 1' },
+    { id: 2, url: getImageUrl('cake (2).jpg'), alt: 'Pastel 2' },
+    { id: 3, url: getImageUrl('cake (3).jpg'), alt: 'Pastel 3' },
+    { id: 4, url: getImageUrl('cake (4).jpg'), alt: 'Pastel 4' },
+    { id: 5, url: getImageUrl('cake (5).jpg'), alt: 'Pastel 5' }
   ]);
-
-  getImageUrl(imageName: string): string {
-  // Detectar si estamos en producción y en GitHub Pages
-    if (window.location.hostname === 'derikgm.github.io') {
-      return `/Delys/assets/${imageName}`;
-    }
-    return `/assets/${imageName}`;
-  }
-
 
   // Intervalo para auto-play (opcional)
   private autoPlayInterval?: ReturnType<typeof setInterval>;
