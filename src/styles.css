@@ -1,8 +1,32 @@
+/* styles.css */
 @import "tailwindcss";
 
 /* @import '@fortawesome/fontawesome-free/css/all.min.css'; */
 
-/* Estilos base */
+/* ============================================
+   VARIABLES DE COLORES - MARCA DELYS
+   ============================================ */
+:root {
+  /* Colores principales de la marca */
+  --delys-primary: #4C5D3B;      /* Verde oscuro */
+  --delys-secondary: #8FA37F;    /* Verde medio */
+  --delys-tertiary: #C6D3BB;     /* Verde claro */
+  --delys-light: #F3EFE6;        /* Beige/crema */
+  --delys-accent: #DA4F37;       /* Rojo/naranja */
+  
+  /* Para compatibilidad con código existente */
+  --color-domus-primary: #4C5D3B;
+  --color-domus-secondary: #8FA37F;
+  --color-domus-light: #F3EFE6;
+  
+  /* Colores base */
+  --color-gray-800: #2D2D2D;
+  --color-white: #FFFFFF;
+}
+
+/* ============================================
+   ESTILOS BASE
+   ============================================ */
 html {
   scroll-behavior: smooth;
 }
@@ -10,9 +34,12 @@ html {
 body {
   font-family: 'Montserrat', sans-serif;
   color: var(--color-gray-800);
+  background-color: var(--delys-light);
 }
 
-/* Animaciones de entrada con @keyframes */
+/* ============================================
+   ANIMACIONES
+   ============================================ */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -32,11 +59,11 @@ section {
 @keyframes pulse {
   0%, 100% { 
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    box-shadow: 0 0 0 0 rgba(74, 177, 106, 0.7);
   }
   50% { 
     transform: scale(1.05);
-    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+    box-shadow: 0 0 0 10px rgba(74, 177, 106, 0);
   }
 }
 
@@ -44,25 +71,217 @@ section {
   animation: pulse 2s infinite;
 }
 
-/* Transiciones suaves */
+/* ============================================
+   TRANSICIONES
+   ============================================ */
 * {
   transition: all 0.2s ease;
 }
 
-/* Scrollbar personalizada */
+/* ============================================
+   SCROLLBAR PERSONALIZADA
+   ============================================ */
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: var(--color-domus-light);
+  background-color: var(--delys-tertiary);
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--color-domus-secondary);
+  background-color: var(--delys-secondary);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-domus-primary);
+  background-color: var(--delys-primary);
+}
+
+/* ============================================
+   UTILIDADES PERSONALIZADAS - MARCAS
+   ============================================ */
+/* FONDOS */
+.bg-delys-primary { background-color: var(--delys-primary); }
+.bg-delys-secondary { background-color: var(--delys-secondary); }
+.bg-delys-tertiary { background-color: var(--delys-tertiary); }
+.bg-delys-light { background-color: var(--delys-light); }
+.bg-delys-accent { background-color: var(--delys-accent); }
+
+/* TEXTOS */
+.text-delys-primary { color: var(--delys-primary); }
+.text-delys-secondary { color: var(--delys-secondary); }
+.text-delys-tertiary { color: var(--delys-tertiary); }
+.text-delys-light { color: var(--delys-light); }
+.text-delys-accent { color: var(--delys-accent); }
+
+/* BORDES */
+.border-delys-primary { border-color: var(--delys-primary); }
+.border-delys-secondary { border-color: var(--delys-secondary); }
+.border-delys-tertiary { border-color: var(--delys-tertiary); }
+.border-delys-light { border-color: var(--delys-light); }
+.border-delys-accent { border-color: var(--delys-accent); }
+
+/* HOVERS */
+.hover-bg-delys-primary:hover { background-color: var(--delys-primary); }
+.hover-bg-delys-secondary:hover { background-color: var(--delys-secondary); }
+.hover-bg-delys-tertiary:hover { background-color: var(--delys-tertiary); }
+.hover-bg-delys-light:hover { background-color: var(--delys-light); }
+.hover-bg-delys-accent:hover { background-color: var(--delys-accent); }
+
+.hover-text-delys-primary:hover { color: var(--delys-primary); }
+.hover-text-delys-secondary:hover { color: var(--delys-secondary); }
+.hover-text-delys-tertiary:hover { color: var(--delys-tertiary); }
+.hover-text-delys-light:hover { color: var(--delys-light); }
+.hover-text-delys-accent:hover { color: var(--delys-accent); }
+
+.hover-border-delys-primary:hover { border-color: var(--delys-primary); }
+.hover-border-delys-secondary:hover { border-color: var(--delys-secondary); }
+.hover-border-delys-tertiary:hover { border-color: var(--delys-tertiary); }
+.hover-border-delys-light:hover { border-color: var(--delys-light); }
+.hover-border-delys-accent:hover { border-color: var(--delys-accent); }
+
+/* ============================================
+   COMPATIBILIDAD CON NOMBRES ANTERIORES
+   ============================================ */
+:root {
+  --color-domus-primary: var(--delys-primary);
+  --color-domus-secondary: var(--delys-secondary);
+  --color-domus-tertiary: var(--delys-tertiary);
+  --color-domus-light: var(--delys-light);
+  --color-domus-accent: var(--delys-accent);
+}
+
+/* Clases de compatibilidad */
+.bg-domus-primary { background-color: var(--delys-primary); }
+.bg-domus-secondary { background-color: var(--delys-secondary); }
+.bg-domus-light { background-color: var(--delys-light); }
+
+.text-domus-primary { color: var(--delys-primary); }
+.text-domus-secondary { color: var(--delys-secondary); }
+.text-domus-light { color: var(--delys-light); }
+.text-domus-accent { color: var(--delys-accent); }
+
+.border-domus-primary { border-color: var(--delys-primary); }
+.border-domus-secondary { border-color: var(--delys-secondary); }
+.border-domus-light { border-color: var(--delys-light); }
+.border-domus-accent { border-color: var(--delys-accent); }
+
+/* ============================================
+   ESTILOS ADICIONALES DE LA MARCA
+   ============================================ */
+/* Badge de marca */
+.brand-badge {
+  display: inline-block;
+  background-color: var(--delys-accent);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Slogan de la marca */
+.brand-slogan {
+  color: var(--delys-secondary);
+  font-style: italic;
+  font-weight: 300;
+}
+
+/* Botón principal de la marca */
+.btn-delys-primary {
+  background-color: var(--delys-primary);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(76, 93, 59, 0.3);
+}
+
+.btn-delys-primary:hover {
+  background-color: #3A4A2E;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 93, 59, 0.4);
+}
+
+.btn-delys-primary:active {
+  transform: translateY(0);
+}
+
+/* Botón de acento (rojo) */
+.btn-delys-accent {
+  background-color: var(--delys-accent);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(218, 79, 55, 0.3);
+}
+
+.btn-delys-accent:hover {
+  background-color: #C4432F;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(218, 79, 55, 0.4);
+}
+
+/* Card de producto */
+.card-delys {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(76, 93, 59, 0.1);
+  border: 1px solid var(--delys-tertiary);
+  transition: all 0.3s ease;
+}
+
+.card-delys:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(76, 93, 59, 0.15);
+  border-color: var(--delys-primary);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  section {
+    animation-duration: 0.5s;
+  }
+  
+  .btn-delys-primary,
+  .btn-delys-accent {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ============================================
+   UTILIDADES EXTRA
+   ============================================ */
+/* Texto decorativo de la marca */
+.brand-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: var(--delys-primary);
+  letter-spacing: -0.5px;
+}
+
+.brand-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  color: var(--delys-secondary);
+}
+
+/* Separador decorativo */
+.separator-delys {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, var(--delys-primary), var(--delys-accent));
+  border-radius: 9999px;
+  margin: 0.5rem 0;
 }

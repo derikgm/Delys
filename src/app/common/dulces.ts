@@ -2,18 +2,18 @@ import { Dulce } from "../interfaces/dulces.interfaces";
 
 //Tipos de dulces:
 export let tipos_de_dulces: Dulce[] = [
-  {
-    nombre: 'Chocoflan con merenge',
-    precio: 4500,
-  },
-  {
-    nombre: 'Flan mediano (15 cm)',
-    precio: 2000,
-  },
-  {
-    nombre: 'Flan Grande (18 cm)',
-    precio: 3000,
-  },
+  // {
+  //   nombre: 'Chocoflan con merenge',
+  //   precio: 4500,
+  // },
+  // {
+  //   nombre: 'Flan mediano (15 cm)',
+  //   precio: 2000,
+  // },
+  // {
+  //   nombre: 'Flan Grande (18 cm)',
+  //   precio: 3000,
+  // },
   {
     nombre: "Charolas surtida",
     precio: 1000,

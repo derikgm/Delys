@@ -33,7 +33,7 @@
         </div>
 
         <!-- Botón de ver más -->
-        @if (!mostrar_todos()) {
+        @if (!mostrar_todos() && ofertas.length > 5) {
             <div class="text-center mt-12">
                 <button 
                 (click)="mostrar_todos.set(true)"

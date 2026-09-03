@@ -9,5 +9,5 @@ import { NgStyle } from '@angular/common';
 })
 export class ProductosComponent {
   ofertas = tipos_de_dulces;
-  mostrar_todos = signal(false);
+  mostrar_todos = signal(this.ofertas.length > 5);
 }

@@ -3,7 +3,7 @@ import { HomeComponent } from '../sections/home.component';
 import { AboutComponent } from '../sections/about.component';
 import { ContactComponent } from '../sections/contact.component';
 // import { GalleryComponent } from '../sections/gallery.component';
-import { ServicesComponent } from '../sections/services.component';
+import { ServicesComponent } from '../sections/services.component/services.component';
 import { CarruselComponent } from "../carrusel.component";
 import { ProductosComponent } from "../productos.component/productos.component";
 // import { StoreComponent } from '../sections/store.component';
