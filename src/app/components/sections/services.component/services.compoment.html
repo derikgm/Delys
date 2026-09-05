@@ -27,7 +27,18 @@
               <card-encargo-component 
               class="max-w-lg"
               [index]="$index" 
-              [encargo]="encargo" />
+              [encargo]="encargo" 
+              (abrirSelector)="abrirSelectorDulces($index)"
+              />
+            }
+
+            @if (mostrarSelector()) {
+              <selector-dulce
+                [visible]="mostrarSelector()"
+                [dulceActual]="indiceParaSelector() !== null ? encargos()[indiceParaSelector()!].dulce : null"
+                (onSeleccionar)="seleccionarDulce($event)"
+                (onCerrar)="cerrarSelector()"
+              />
             }
           }
           </div>

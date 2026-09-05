@@ -10,15 +10,14 @@ export class EncargoServices {
 
   encargos = signal<Encargo []>([]);
 
-  manejar_cambio_de_cantidad(encargo_index: number, input: HTMLInputElement) {
-    const nuevaCantidad = parseInt(input.value) || 1;
+  manejar_cambio_de_cantidad(encargo_index: number, nueva_cantidad: number) {
     
     this.encargos.update((encargos) => {
       return encargos.map((encargo, index) => {
         if (index === encargo_index) {
           return {
             ...encargo,
-            cantidad: nuevaCantidad
+            cantidad: nueva_cantidad
           };
         }
         return encargo;
@@ -27,10 +26,8 @@ export class EncargoServices {
   }
 
   // Método para cambiar el dulce seleccionado
-  manejar_cambio_de_dulce(encargo_index: number, event: Event) {
-    const select = event.target as HTMLSelectElement;
-    const nombreDulce = select.value;
-    const dulceSeleccionado = this.tipos_de_dulces.find(d => d.nombre === nombreDulce);
+  manejar_cambio_de_dulce(encargo_index: number, dulce_id: number) {
+    const dulceSeleccionado = this.tipos_de_dulces.find(d => d.id === dulce_id);
     
     if (dulceSeleccionado) {
       this.encargos.update((encargos) => {

@@ -6,6 +6,7 @@ import { tipos_de_dulces } from '../../../common/dulces';
 import { EncargoServices } from '../../../services/encargo.services';
 import { EncargoComponent } from "./components/card-encargo.component";
 import { ValidarEncargoComponent } from "./components/validar-encargo.component";
+import { SelectorDulceComponent } from './components/selector-dulce.component';
 
 @Component({
   selector: 'app-services',
@@ -16,12 +17,15 @@ import { ValidarEncargoComponent } from "./components/validar-encargo.component"
     })
   ],
   templateUrl: 'services.compoment.html',
-  imports: [NgIcon, EncargoComponent, ValidarEncargoComponent]
+  imports: [NgIcon, EncargoComponent, ValidarEncargoComponent, SelectorDulceComponent]
 })
 export class ServicesComponent implements OnInit {
 
   encargo_services = inject(EncargoServices);
   mostrarDialog = signal(false);
+
+  mostrarSelector = signal(false);
+  indiceParaSelector = signal<number | null>(null);
 
   precio = computed<number>(() => {
     let precio = 0;
@@ -83,6 +87,30 @@ export class ServicesComponent implements OnInit {
     }
     
     return true;
+  }
+
+  abrirSelectorDulces(indice: number) {
+    this.indiceParaSelector.set(indice);
+    this.mostrarSelector.set(true);
+  }
+
+  // Método para manejar la selección del dulce
+  seleccionarDulce(dulce: Dulce) {
+    console.log("Esta vaina funciona?");
+    console.log(dulce);
+
+    const indice = this.indiceParaSelector();
+    if (indice !== null) {
+      this.encargo_services.manejar_cambio_de_dulce(indice, dulce.id);
+    }
+    this.mostrarSelector.set(false);
+    this.indiceParaSelector.set(null);
+  }
+
+  // Método para cerrar el selector
+  cerrarSelector() {
+    this.mostrarSelector.set(false);
+    this.indiceParaSelector.set(null);
   }
 
   grid_classes(){
