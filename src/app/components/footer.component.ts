@@ -27,7 +27,7 @@ import { Component } from '@angular/core';
 
           <!-- Derechos -->
           <p class="text-sm text-gray-300">
-            © {{ currentYear }} DOMUS. Todos los derechos reservados.
+            © {{ currentYear }} DELYS. Todos los derechos reservados.
           </p>
         </div>
       </div>
