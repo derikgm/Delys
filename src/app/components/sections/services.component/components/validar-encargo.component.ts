@@ -129,8 +129,16 @@ import { FormsModule } from '@angular/forms';
                     [min]="fechaMinima()"
                     [max]="fechaMaximaString()"
                     (change)="validarFecha()"
-                    class="hidden"
+                    class="text-black/0"
                     #fechaInput>
+
+                  <!-- <input
+                    type="date"
+                    name="fecha"
+                    [min]="fechaMinima()"
+                    [max]="fechaMaximaString()"
+                    (change)="validarFecha()"
+                    #fechaInput> -->
                   
                   <div class="flex gap-2">
                     <button

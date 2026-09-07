@@ -24,11 +24,11 @@ import { Dulce } from '../../../../interfaces/dulces.interfaces';
         items-center justify-center p-4"
         (click)="cerrar()"
         (scroll)="$event.stopPropagation()"
-        style="overflow: hidden;"
       >
         <!-- Modal -->
         <div 
-          class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden animate-slideUp"
+          class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full 
+          max-h-[90vh] overflow-auto animate-slideUp"
           (click)="$event.stopPropagation()"
         >
           <!-- Header - fijo -->

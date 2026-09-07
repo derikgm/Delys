@@ -118,7 +118,7 @@ export class ServicesComponent implements OnInit {
     let clase = "";
     
     if(this.encargos().length <= 1)
-      clase = "flex justify-center";
+      clase = "flex justify-center w-full";
     
     if(this.encargos().length < 4 && this.encargos().length >= 2)
       clase = "grid grid-cols-1 sm:grid-cols-2 gap-4";
