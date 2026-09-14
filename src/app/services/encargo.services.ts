@@ -1,8 +1,7 @@
-import { computed, inject, Injectable, Service, signal } from '@angular/core';
+import {  inject, Injectable, signal } from '@angular/core';
 import { Dulce, Encargo } from '../interfaces/dulces.interfaces';
 import { getImageUrl, is_in_dev_mode, } from '../common/dulces';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root' 
@@ -36,7 +35,6 @@ export class EncargoServices {
         console.error('Error al cargar los dulces:', error);
       }
     }
-  
 
   manejar_cambio_de_cantidad(encargo_index: number, nueva_cantidad: number) {
     this.encargos.update((encargos) => {
