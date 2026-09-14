@@ -9,7 +9,7 @@ import { getImageUrl } from '../common/dulces';
   template: `
     <div class="relative w-full max-w-4xl mx-auto overflow-hidden rounded-2xl shadow-2xl">
       <!-- Contenedor del carrusel -->
-      <div class="relative h-[400px] md:h-[500px] bg-gray-900">
+      <div class="relative h-100 md:h-125 bg-gray-900">
         <!-- Imágenes -->
         @for (image of images(); track image.id; let i = $index) {
           <div 
@@ -29,7 +29,7 @@ import { getImageUrl } from '../common/dulces';
         }
         
         <!-- Overlay inferior con indicadores -->
-        <div class="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/60 to-transparent p-4">
+        <div class="absolute bottom-0 left-0 right-0 z-20 bg-linear-to-t from-black/60 to-transparent p-4">
           <div class="flex justify-center gap-2 mb-2">
             @for (image of images(); track image.id; let i = $index) {
               <button
@@ -89,11 +89,11 @@ export class CarruselComponent {
   
   // Signal para las imágenes
   images = signal<Array<{ id: number; url: string; alt: string }>>([
-    { id: 1, url: getImageUrl('cake (1).jpg'), alt: 'Pastel 1' },
-    { id: 2, url: getImageUrl('cake (2).jpg'), alt: 'Pastel 2' },
-    { id: 3, url: getImageUrl('cake (3).jpg'), alt: 'Pastel 3' },
-    { id: 4, url: getImageUrl('cake (4).jpg'), alt: 'Pastel 4' },
-    { id: 5, url: getImageUrl('cake (5).jpg'), alt: 'Pastel 5' }
+    { id: 1, url: getImageUrl('cake (1)'), alt: 'Pastel 1' },
+    { id: 2, url: getImageUrl('cake (2)'), alt: 'Pastel 2' },
+    { id: 3, url: getImageUrl('cake (3)'), alt: 'Pastel 3' },
+    { id: 4, url: getImageUrl('cake (4)'), alt: 'Pastel 4' },
+    { id: 5, url: getImageUrl('cake (5)'), alt: 'Pastel 5' }
   ]);
 
   // Intervalo para auto-play (opcional)

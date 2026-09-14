@@ -5,9 +5,7 @@
         </h2>
 
         @if (encargo_services.cargando_dulces()) {
-
-            <p>Conectando con el servidor</p>
-
+            <server-sping />
         } @else {
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 @for (dulce of ofertas(); track $index) {

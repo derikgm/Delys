@@ -23,20 +23,17 @@ export class EncargoServices {
     try {
         this.http.get<{dulces: Dulce[]}>(`${this.API_URL}/dulces`).subscribe({
           next: (data) => {
-            console.log(data);
-
             const dulces = data.dulces.map((d) => {
               d.imagen = getImageUrl(d.nombre);
               return d;
             })
 
             this.tipos_de_dulces.set(dulces)
+            this.cargando_dulces.set(false);
           }
         })
       } catch (error) {
         console.error('Error al cargar los dulces:', error);
-      } finally {
-        this.cargando_dulces.set(false);
       }
     }
   

@@ -6,6 +6,7 @@ import { EncargoServices } from '../../../services/encargo.services';
 import { EncargoComponent } from "./components/card-encargo.component";
 import { ValidarEncargoComponent } from "./components/validar-encargo.component";
 import { SelectorDulceComponent } from './components/selector-dulce.component';
+import { ServerSpingComponent } from "../../../common/sping.component";
 
 @Component({
   selector: 'app-services',
@@ -16,7 +17,7 @@ import { SelectorDulceComponent } from './components/selector-dulce.component';
     })
   ],
   templateUrl: 'services.compoment.html',
-  imports: [NgIcon, EncargoComponent, ValidarEncargoComponent, SelectorDulceComponent]
+  imports: [NgIcon, EncargoComponent, ValidarEncargoComponent, SelectorDulceComponent, ServerSpingComponent]
 })
 export class ServicesComponent implements OnInit {
 
