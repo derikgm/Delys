@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, Service, signal } from '@angular/core';
 import { Dulce, Encargo } from '../interfaces/dulces.interfaces';
-import { is_in_dev_mode, } from '../common/dulces';
+import { getImageUrl, is_in_dev_mode, } from '../common/dulces';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
@@ -19,23 +19,20 @@ export class EncargoServices {
 
   http = inject(HttpClient)
 
-
   async init() {
     try {
-      // Fetch usando HttpClient + firstValueFrom (convierte Observable a Promise)
-        // const dulces = await firstValueFrom(
-        //   this.http.get<Dulce[]>(`${this.API_URL}/dulces`)
-        // );
-        this.http.get(`${this.API_URL}/dulces`).subscribe({
+        this.http.get<{dulces: Dulce[]}>(`${this.API_URL}/dulces`).subscribe({
           next: (data) => {
             console.log(data);
+
+            const dulces = data.dulces.map((d) => {
+              d.imagen = getImageUrl(d.nombre);
+              return d;
+            })
+
+            this.tipos_de_dulces.set(dulces)
           }
         })
-
-        // console.log(data);
-
-        // this.tipos_de_dulces.set(dulces);
-
       } catch (error) {
         console.error('Error al cargar los dulces:', error);
       } finally {
