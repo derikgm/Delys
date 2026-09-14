@@ -4,8 +4,9 @@
             Dulces <span class="font-bold text-green-700">Artesanales</span>
         </h2>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            @for (dulce of ofertas; track $index) {
+        @if (encargo_services.cargando_dulces()) {
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            @for (dulce of ofertas(); track $index) {
                 @if (mostrar_todos() || $index < 5) {
                     <div class="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
                         <div
@@ -33,7 +34,7 @@
         </div>
 
         <!-- Botón de ver más -->
-        @if (!mostrar_todos() && ofertas.length > 5) {
+        @if (!mostrar_todos() && ofertas().length > 5) {
             <div class="text-center mt-12">
                 <button 
                 (click)="mostrar_todos.set(true)"
@@ -43,6 +44,7 @@
                     Ver todos los dulces →
                 </button>
             </div>
+        }
         }
     </div>
 </section>

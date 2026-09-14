@@ -3,8 +3,8 @@ import { Component, computed, inject, input, output, signal, effect } from '@ang
 import { NgIcon } from '@ng-icons/core';
 import { matClose, matSearch } from '@ng-icons/material-icons/baseline';
 import { provideIcons } from '@ng-icons/core';
-import { tipos_de_dulces } from '../../../../common/dulces';
 import { Dulce } from '../../../../interfaces/dulces.interfaces';
+import { EncargoServices } from '../../../../services/encargo.services';
 
 @Component({
   selector: 'selector-dulce',
@@ -167,7 +167,7 @@ export class SelectorDulceComponent {
   onCerrar = output<void>();
 
   // Inyecciones
-  private tipos_dulces = tipos_de_dulces;
+  tipos_dulces = inject(EncargoServices).tipos_de_dulces;
   
   // Estado
   busqueda = signal('');
@@ -185,10 +185,11 @@ export class SelectorDulceComponent {
   // Computed
   dulcesFiltrados = computed(() => {
     const busqueda = this.busqueda().toLowerCase().trim();
-    if (!busqueda) return this.tipos_dulces;
-    return this.tipos_dulces.filter(dulce => 
+    if (!busqueda) return this.tipos_dulces();
+
+    return this.tipos_dulces().filter(dulce => 
       dulce.nombre.toLowerCase().includes(busqueda)
-    );
+    );;
   });
 
   // Métodos

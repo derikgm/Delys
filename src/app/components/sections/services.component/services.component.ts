@@ -2,7 +2,6 @@ import { Component, computed, inject, OnInit, signal, } from '@angular/core';
 import { provideIcons, NgIcon } from '@ng-icons/core';
 import { matAdd } from '@ng-icons/material-icons/baseline';
 import { Dulce } from '../../../interfaces/dulces.interfaces';
-import { tipos_de_dulces } from '../../../common/dulces';
 import { EncargoServices } from '../../../services/encargo.services';
 import { EncargoComponent } from "./components/card-encargo.component";
 import { ValidarEncargoComponent } from "./components/validar-encargo.component";
@@ -22,8 +21,10 @@ import { SelectorDulceComponent } from './components/selector-dulce.component';
 export class ServicesComponent implements OnInit {
 
   encargo_services = inject(EncargoServices);
-  mostrarDialog = signal(false);
+  encargos = this.encargo_services.encargos;
 
+  mostrarDialog = signal(false);
+  
   mostrarSelector = signal(false);
   indiceParaSelector = signal<number | null>(null);
 
@@ -33,13 +34,10 @@ export class ServicesComponent implements OnInit {
     return precio;
   })
 
-  tipos_de_dulces: Dulce[] = [];
+  tipos_de_dulces = this.encargo_services.tipos_de_dulces;
 
-  encargos = this.encargo_services.encargos;
 
-  ngOnInit(): void {
-    this.tipos_de_dulces.push(...tipos_de_dulces);
-  }
+  ngOnInit(): void {}
 
   abrirDialog() {
     this.mostrarDialog.set(true);
@@ -63,7 +61,7 @@ export class ServicesComponent implements OnInit {
       return [
         ...encargos,
         {
-          dulce: this.tipos_de_dulces[0], // Por defecto el primer dulce
+          dulce: this.tipos_de_dulces()[0], // Por defecto el primer dulce
           cantidad: 1,
         }
       ];

@@ -1,6 +1,5 @@
 // card-encargo.component.ts
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
-import { tipos_de_dulces } from '../../../../common/dulces';
 import { Encargo } from '../../../../interfaces/dulces.interfaces';
 import { EncargoServices } from '../../../../services/encargo.services';
 import { NgIcon } from '@ng-icons/core';
@@ -103,8 +102,8 @@ import { provideIcons } from '@ng-icons/core';
 export class EncargoComponent {
   index = input.required<number>();
   encargo = input.required<Encargo>();
-  tipos_de_dulces = tipos_de_dulces;
   encargo_services = inject(EncargoServices);
+  // tipos_de_dulces = this.encargo_services.tipos_de_dulces;
   
   // Output para abrir el selector
   abrirSelector = output<void>();
