@@ -55,8 +55,6 @@ export class HeaderComponent {
   
   menuItems = [
     { id: 'productos', label: 'Productos' },
-    { id: 'encargo', label: 'Encarge su dulce' },
-    { id: 'radicamos', label: 'Lugar' },
     { id: 'contacto', label: 'contacto' },
   ];
 

@@ -1,23 +1,27 @@
 import { Component, inject, signal } from '@angular/core';
-import { Dulce } from '../../interfaces/dulces.interfaces';
-// import { tipos_de_dulces } from '../../common/dulces';
-import { NgStyle } from '@angular/common';
 import { EncargoServices } from '../../services/encargo.services';
-import { ServerSpingComponent } from "../../common/sping.component";
+import { NgIcon, provideIcons } from "@ng-icons/core";
+import { matWhatsappOutline } from '@ng-icons/material-icons/outline';
+import { contacto_link, numero_contacto } from '../../../data/contacto';
 
 @Component({
   selector: 'productos-component',
   templateUrl: 'productos.component.html',
-  imports: [ServerSpingComponent],
+  imports: [NgIcon],
+  providers: [
+    provideIcons({
+      whatsap: matWhatsappOutline
+    })
+  ]
 })
 export class ProductosComponent {
-  // ofertas = tipos_de_dulces;
-  
   encargo_services = inject(EncargoServices)
 
   ofertas = this.encargo_services.tipos_de_dulces;
 
   mostrar_todos = signal(false);
+  
+  whatsappLink = contacto_link;
 
   constructor () {
 

@@ -17,7 +17,12 @@ import { ServerSpingComponent } from "../../../common/sping.component";
     })
   ],
   templateUrl: 'services.compoment.html',
-  imports: [NgIcon, EncargoComponent, ValidarEncargoComponent, SelectorDulceComponent, ServerSpingComponent]
+  imports: [
+    NgIcon, 
+    EncargoComponent, 
+    ValidarEncargoComponent, 
+    SelectorDulceComponent, 
+  ]
 })
 export class ServicesComponent implements OnInit {
 

@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { matWhatsappOutline, matMailOutline, matMapOutline, matPhoneOutline} from "@ng-icons/material-icons/outline"
+import { numero_contacto } from '../../../data/contacto';
 
 @Component({
   selector: 'app-contact',
@@ -16,7 +17,7 @@ import { matWhatsappOutline, matMailOutline, matMapOutline, matPhoneOutline} fro
   ],
 
   template: `
-    <section class="py-16 bg-white">
+    <section class="pb-10 bg-white">
       <div class="container mx-auto px-4 max-w-6xl">
         <h2 class="text-4xl font-bold text-center text-domus-primary mb-12">Contacto</h2>
 
@@ -49,31 +50,31 @@ export class ContactComponent {
     {
       icon: 'phone',
       label: 'Teléfono',
-      value: '+52 123 456 7890',
-      href: 'tel:+521234567890',
+      value: `+53 ${numero_contacto}`,
+      href: `tel:+53${numero_contacto}`,
       bgColor: 'bg-black'
     },
     {
       icon: 'whatsap',
       label: 'WhatsApp',
-      value: '+52 123 456 7890',
-      href: 'https://wa.me/5211234567890',
+      value: `+53 ${numero_contacto}`,
+      href: `https://wa.me/${numero_contacto}`,
       target: '_blank',
       bgColor: 'bg-green-500'
     },
     {
       icon: 'mail',
       label: 'Correo',
-      value: 'info@domus.mx',
-      href: 'mailto:info@domus.mx',
+      value: 'reposteria.delyss@gmail.com',
+      href: 'mailto:reposteria.delyss@gmail.com',
       bgColor: 'bg-blue-500'
     },
-    {
-      icon: 'map',
-      label: 'Dirección',
-      value: 'SS, Av. 26 de julio, 568-C',
-      href: '#',
-      bgColor: 'bg-red-500'
-    }
+    // {
+    //   icon: 'map',
+    //   label: 'Dirección',
+    //   value: 'SS, Av. 26 de julio, 568-C',
+    //   href: '#',
+    //   bgColor: 'bg-red-500'
+    // }
   ]);
 }

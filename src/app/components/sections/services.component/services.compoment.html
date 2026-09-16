@@ -4,9 +4,6 @@
           Encarge su dulce
         </h2>
 
-        @if (encargo_services.cargando_dulces()) {
-            <server-sping />
-        } @else {
         <!-- Seccion de dulces a encargar: -->
         <div class="w-full">
           <!-- Grid de dulces -->
@@ -82,9 +79,7 @@
           }
 
         </div>
-      }
       </div>
-
 
 <!-- Dialog de validación -->
       @if (mostrarDialog()) {
