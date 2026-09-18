@@ -32,9 +32,9 @@ import { Dulce } from "../interfaces/dulces.interfaces";
 export function getImageUrl(imageName: string): string {
   // Detectar si estamos en producción y en GitHub Pages
   if (window.location.hostname === 'derikgm.github.io') {
-    return `/Delys/assets/${imageName}.jpg`;
+    return `/Delys/assets/${imageName}`;
   }
-  return `/assets/${imageName}.jpg`;
+  return `/assets/${imageName}`;
 }
 
 export function is_in_dev_mode(): boolean {

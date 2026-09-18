@@ -89,11 +89,11 @@ export class CarruselComponent {
   
   // Signal para las imágenes
   images = signal<Array<{ id: number; url: string; alt: string }>>([
-    { id: 1, url: getImageUrl('cake (1)'), alt: 'Pastel 1' },
-    { id: 2, url: getImageUrl('cake (2)'), alt: 'Pastel 2' },
-    { id: 3, url: getImageUrl('cake (3)'), alt: 'Pastel 3' },
-    { id: 4, url: getImageUrl('cake (4)'), alt: 'Pastel 4' },
-    { id: 5, url: getImageUrl('cake (5)'), alt: 'Pastel 5' }
+    { id: 1, url: getImageUrl('carrusel 1.jpg'), alt: 'Pastel 1' },
+    { id: 2, url: getImageUrl('carrusel 2.jpg'), alt: 'Pastel 2' },
+    { id: 3, url: getImageUrl('carrusel 3.jpg'), alt: 'Pastel 3' },
+    // { id: 4, url: getImageUrl('cake (4)'), alt: 'Pastel 4' },
+    // { id: 5, url: getImageUrl('cake (5)'), alt: 'Pastel 5' }
   ]);
 
   // Intervalo para auto-play (opcional)

@@ -3,6 +3,7 @@ import { ContactComponent } from '../sections/contact.component';
 import { CarruselComponent } from "../carrusel.component";
 import { ProductosComponent } from "../productos.component/productos.component";
 import { EncargoServices } from '../../services/encargo.services';
+import { PromocionComponent } from "../sections/promocion.component";
 
 @Component({
   selector: 'app-home-page',
@@ -10,7 +11,8 @@ import { EncargoServices } from '../../services/encargo.services';
   imports: [
     ContactComponent,
     CarruselComponent,
-    ProductosComponent
+    ProductosComponent,
+    PromocionComponent
 ],
   template: `
   <!-- Aqui va el carrucel -->
@@ -22,6 +24,9 @@ import { EncargoServices } from '../../services/encargo.services';
     </section>
     <section id="contacto">
       <app-contact />
+    </section>
+    <section id="promocion">
+      <app-promocion />
     </section>
   `
 })

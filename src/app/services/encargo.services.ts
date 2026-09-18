@@ -19,8 +19,8 @@ export class EncargoServices {
     },
     {
       id:2, 
-      nombre: "Panetela Media",
-      precio: 3500
+      nombre: "Cake de cumpleaños",
+      precio: 3200
     },
     {
       id: 3, 
@@ -31,7 +31,17 @@ export class EncargoServices {
       id:4, 
       nombre: "Panetela Grande con cobertura de flores",
       precio: 4700
-    }
+    },
+    {
+      id:5, 
+      nombre: "Beso de angel",
+      precio: 5500
+    },
+    {
+      id:6, 
+      nombre: "Cake con imagen",
+      precio: 5500
+    },
   ]);
 
   encargos = signal<Encargo[]>([]);
@@ -40,7 +50,7 @@ export class EncargoServices {
 
   constructor(){
     const dulces = this.tipos_de_dulces().map((d) => {
-      d.imagen = getImageUrl(d.nombre);
+      d.imagen = getImageUrl(d.nombre + ".jpg") ;
       return d;
     })
 
