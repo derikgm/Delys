@@ -1,14 +1,7 @@
-import { RouterModule, Routes } from '@angular/router';
-import { HomePageComponent } from './components/pages/home-page.component';
-import { NgModule } from '@angular/core';
+import { Routes } from '@angular/router';
+import { PaginaInicioComponent } from './componentes/paginas/pagina-inicio.component';
 
-export const routes: Routes = [
-  { path: '', component: HomePageComponent },
-  { path: '**', redirectTo: '' }
+export const rutas: Routes = [
+  { path: '', component: PaginaInicioComponent },
+  { path: '**', redirectTo: '' },
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })], // <-- Agrega { useHash: true }
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }

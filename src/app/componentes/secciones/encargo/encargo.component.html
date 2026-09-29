@@ -1,0 +1,117 @@
+<section class="py-16 bg-delys-light">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <h2 class="text-4xl font-bold text-center text-delys-primary mb-12">Encargue su dulce</h2>
+
+    @if (cargandoDulces()) {
+      <app-indicador-carga />
+    } @else {
+      <div class="w-full text-xl">
+        @if (encargos().length === 0) {
+          <!-- Estado inicial: invitar a crear el primer encargo -->
+          <div class="flex w-full justify-center">
+            <button
+              type="button"
+              (click)="agregarEncargo()"
+              class="w-full aspect-square rounded-lg border-4 border-dashed border-green-500 flex justify-center text-center items-center text-green-500 cursor-pointer hover:text-green-700 transition-colors max-w-lg"
+            >
+              <p class="flex justify-center w-full items-center">
+                <ng-icon class="text-6xl" name="agregar" />
+                <span class="text-2xl">Agregar un encargo</span>
+              </p>
+            </button>
+          </div>
+        } @else {
+          <p class="text-gray-400 italic text-center">
+            (Toque sobre la imagen para cambiar de dulce)
+          </p>
+
+          <div class="w-full flex justify-center" [classList]="clasesCuadricula()">
+            @for (encargo of encargos(); track $index) {
+              <app-tarjeta-encargo
+                class="max-w-lg"
+                [indice]="$index"
+                [encargo]="encargo"
+                (solicitarCambioDulce)="abrirSelector($index)"
+                (solicitarEliminar)="eliminarEncargo($index)"
+              />
+            }
+          </div>
+        }
+
+        @if (mostrarSelector()) {
+          <app-selector-dulce
+            [visible]="mostrarSelector()"
+            [dulceActual]="dulceEnEdicion()"
+            (dulceSeleccionado)="seleccionarDulce($event)"
+            (cerrado)="cerrarSelector()"
+          />
+        }
+
+        @if (encargos().length !== 0) {
+          <!-- Botón para agregar otro dulce + precio estimado -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-4 justify-between my-4 items-center transition-colors"
+          >
+            <div class="w-full flex justify-center items-center agregar-padre cursor-pointer">
+              <button
+                type="button"
+                (click)="agregarEncargo()"
+                class="flex justify-center items-center border-2 rounded"
+              >
+                <ng-icon class="text-4xl border-r-2" name="agregar" />
+                <span class="text-2xl px-2 select-none">Agregar otro dulce</span>
+              </button>
+            </div>
+
+            <div class="flex w-full justify-center space-x-2 text-2xl select-none">
+              <p>Precio Estimado:</p>
+              <p>{{ precioTotal() }} CUP</p>
+            </div>
+          </div>
+
+          <div class="text-center mt-12">
+            <button
+              type="button"
+              (click)="abrirDialogo()"
+              [disabled]="errorValidacion() !== null"
+              [title]="errorValidacion() ?? ''"
+              class="bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              PEDIR ENCARGO
+            </button>
+
+            @if (errorValidacion(); as error) {
+              <p class="mt-3 text-sm text-red-600">{{ error }}</p>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Diálogo de validación del pedido -->
+  @if (mostrarDialogo()) {
+    <app-validar-encargo
+      [encargos]="encargos()"
+      [precioTotal]="precioTotal()"
+      (cerrarDialogo)="cerrarDialogo()"
+      (pedidoConfirmado)="confirmarPedido($event)"
+    />
+  }
+</section>
+
+<style>
+  .agregar-padre:hover {
+    @reference "tailwindcss";
+    div {
+      @apply border-green-700;
+
+      ng-icon {
+        @apply text-green-700;
+      }
+      span {
+        @apply text-green-700;
+      }
+    }
+  }
+</style>

@@ -1,20 +1,21 @@
 import { Component } from '@angular/core';
-import { FooterComponent } from './components/footer.component';
-import { HeaderComponent } from './components/header.component';
-import { HomePageComponent } from './components/pages/home-page.component';
-import { WhatsAppButtonComponent } from './components/whatsapp-button.component';
+import { PiePaginaComponent } from './componentes/pie-pagina.component';
+import { EncabezadoComponent } from './componentes/encabezado.component';
+import { PaginaInicioComponent } from './componentes/paginas/pagina-inicio.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, WhatsAppButtonComponent, HomePageComponent],
+  imports: [EncabezadoComponent, PiePaginaComponent, PaginaInicioComponent],
   template: `
-    <app-header />
+    <app-encabezado />
     <main class="pt-16">
-      <app-home-page />
+      <app-pagina-inicio />
     </main>
-    <app-footer />
-    <!-- <app-whatsapp-button /> -->
-  `
+    <app-pie-pagina />
+
+    <!-- Botón flotante de WhatsApp: desactivado. Para activarlo, descomenta
+         el import de BotonWhatsappComponent y la etiqueta <app-boton-whatsapp />. -->
+  `,
 })
 export class App {}

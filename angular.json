@@ -7,9 +7,14 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "Domus": {
+    "Delys": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "css",
+          "changeDetection": "OnPush"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -50,10 +55,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Domus:build:production"
+              "buildTarget": "Delys:build:production"
             },
             "development": {
-              "buildTarget": "Domus:build:development"
+              "buildTarget": "Delys:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -63,8 +68,8 @@
         },
         "deploy": {
           "builder": "angular-cli-ghpages:deploy",
-            "options": {
-            "baseHref": "/Domus/"
+          "options": {
+            "baseHref": "/Delys/"
           }
         }
       }
