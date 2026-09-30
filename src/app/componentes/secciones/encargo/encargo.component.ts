@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { provideIcons, NgIcon } from '@ng-icons/core';
 import { matAdd } from '@ng-icons/material-icons/baseline';
 import { IndicadorCargaComponent } from '../../../comunes/indicador-carga.component';
@@ -30,6 +30,9 @@ export class EncargoComponent {
 
   readonly encargos = this.servicioEncargos.encargos;
   readonly cargandoDulces = this.servicioEncargos.cargandoDulces;
+  readonly enviandoPedido = this.servicioEncargos.enviandoPedido;
+  readonly errorPedido = this.servicioEncargos.errorPedido;
+  readonly pedidoEnviado = this.servicioEncargos.pedidoEnviado;
 
   readonly mostrarDialogo = signal(false);
   readonly mostrarSelector = signal(false);
@@ -77,6 +80,8 @@ export class EncargoComponent {
   });
 
   agregarEncargo(): void {
+    // Al arrancar un pedido nuevo se apaga el aviso del pedido anterior.
+    this.servicioEncargos.pedidoEnviado.set(false);
     this.servicioEncargos.agregarEncargo();
   }
 
@@ -116,9 +121,16 @@ export class EncargoComponent {
     this.cerrarSelector();
   }
 
-  /** TODO: enviar el pedido al backend. Por ahora solo se registra en consola. */
+  constructor() {
+    // Si el backend confirma el pedido, el diálogo se cierra solo.
+    effect(() => {
+      if (this.servicioEncargos.pedidoEnviado()) {
+        this.cerrarDialogo();
+      }
+    });
+  }
+
   confirmarPedido(datos: DatosPedido): void {
-    console.info('Pedido confirmado:', datos);
-    this.cerrarDialogo();
+    this.servicioEncargos.enviarPedido(datos);
   }
 }

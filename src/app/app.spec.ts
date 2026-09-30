@@ -3,13 +3,14 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { describe, expect, it, beforeEach } from 'vitest';
+import { NgForm } from '@angular/forms';
 
 import { App } from './app';
 import { rutas } from './app.routes';
 import { ServicioEncargos } from './servicios/encargo.servicio';
 import { obtenerUrlImagen, esModoDesarrollo, resolverImagenDulce } from './comunes/imagenes';
 import { contactoLink, mensajeContacto, numeroContacto } from './datos/contacto';
-import { DulceCatalogo } from './modelos/dulces.modelo';
+import { DatosPedido, DulceCatalogo, Encargo } from './modelos/dulces.modelo';
 import { ValidarEncargoComponent } from './componentes/secciones/encargo/componentes/validar-encargo.component';
 
 /** Fecha en `YYYY-MM-DD` tal como la ve el usuario, usando su calendario local. */
@@ -232,9 +233,9 @@ describe('ServicioEncargos.init con el payload del backend', () => {
  * Con `TZ=America/Havana npm test` cubren el caso real del sitio.
  */
 describe('ValidarEncargoComponent - fechas locales', () => {
-  function crearComponente(): ValidarEncargoComponent {
+  function crearComponente(encargos: Encargo[] = []): ValidarEncargoComponent {
     const fixture = TestBed.createComponent(ValidarEncargoComponent);
-    fixture.componentRef.setInput('encargos', []);
+    fixture.componentRef.setInput('encargos', encargos);
     fixture.componentRef.setInput('precioTotal', 0);
     return fixture.componentInstance;
   }
@@ -309,5 +310,115 @@ describe('ValidarEncargoComponent - fechas locales', () => {
       expect(componente.fechaInvalida()).toBe(false);
       expect(componente.datos.fecha).toBe(isoLocal(dias));
     }
+  });
+
+  it('emite solo los campos que pide el backend, sin horario ni total', () => {
+    const componente = crearComponente([
+      { dulce: { id: 1, nombre: 'Charolas', precio: 1000 }, cantidad: 2 },
+    ]);
+
+    componente.datos.direccion = '  Calle 23  ';
+    componente.datos.telefono = ' 51234567 ';
+    componente.datos.fecha = isoLocal(3);
+    componente.datos.notas = '  Sin azúcar  ';
+
+    let emitido: DatosPedido | null = null;
+    componente.pedidoConfirmado.subscribe((pedido) => (emitido = pedido));
+
+    componente.enviar({ valid: true } as NgForm);
+
+    expect(emitido).toEqual({
+      direccion: 'Calle 23',
+      telefono: '51234567',
+      fecha: isoLocal(3),
+      notas: 'Sin azúcar',
+      encargos: [{ dulce_id: 1, cantidad: 2 }],
+    });
+  });
+
+  it('no cierra el diálogo al enviar: el cierre depende del backend', () => {
+    const componente = crearComponente();
+
+    let cerrado = false;
+    componente.cerrarDialogo.subscribe(() => (cerrado = true));
+
+    componente.enviar({ valid: true } as NgForm);
+
+    expect(cerrado).toBe(false);
+  });
+
+  it('no emite nada si el formulario es inválido', () => {
+    const componente = crearComponente();
+
+    let emitido = false;
+    componente.pedidoConfirmado.subscribe(() => (emitido = true));
+
+    componente.enviar({ valid: false } as NgForm);
+
+    expect(emitido).toBe(false);
+  });
+});
+
+describe('ServicioEncargos.enviarPedido', () => {
+  const pedido: DatosPedido = {
+    direccion: 'Calle 23',
+    telefono: '51234567',
+    fecha: '2026-10-05',
+    notas: '',
+    encargos: [{ dulce_id: 1, cantidad: 2 }],
+  };
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
+  });
+
+  it('hace POST a /pedido con el cuerpo del pedido', () => {
+    const servicio = TestBed.inject(ServicioEncargos);
+    const ctrl = TestBed.inject(HttpTestingController);
+
+    servicio.enviarPedido(pedido);
+
+    const peticion = ctrl.expectOne((r) => r.url.endsWith('/pedido'));
+    expect(peticion.request.method).toBe('POST');
+    expect(peticion.request.body).toEqual(pedido);
+    expect(servicio.enviandoPedido()).toBe(true);
+
+    peticion.flush({});
+    expect(servicio.enviandoPedido()).toBe(false);
+  });
+
+  it('vacía el pedido y avisa cuando el backend lo acepta', () => {
+    const servicio = TestBed.inject(ServicioEncargos);
+    const ctrl = TestBed.inject(HttpTestingController);
+
+    servicio.tiposDeDulces.set([{ id: 1, nombre: 'Charolas', precio: 1000 }]);
+    servicio.agregarEncargo();
+    servicio.enviarPedido(pedido);
+
+    ctrl.expectOne((r) => r.url.endsWith('/pedido')).flush({});
+
+    expect(servicio.pedidoEnviado()).toBe(true);
+    expect(servicio.errorPedido()).toBe(null);
+    expect(servicio.encargos()).toEqual([]);
+  });
+
+  it('conserva el pedido y muestra un error si el envío falla', () => {
+    const servicio = TestBed.inject(ServicioEncargos);
+    const ctrl = TestBed.inject(HttpTestingController);
+
+    servicio.tiposDeDulces.set([{ id: 1, nombre: 'Charolas', precio: 1000 }]);
+    servicio.agregarEncargo();
+    servicio.enviarPedido(pedido);
+
+    ctrl
+      .expectOne((r) => r.url.endsWith('/pedido'))
+      .flush(null, { status: 500, statusText: 'Error del servidor' });
+
+    expect(servicio.pedidoEnviado()).toBe(false);
+    expect(servicio.errorPedido()).toBeTruthy();
+    expect(servicio.enviandoPedido()).toBe(false);
+    expect(servicio.encargos()).toHaveLength(1);
   });
 });

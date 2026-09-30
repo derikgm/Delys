@@ -26,22 +26,24 @@ export interface Encargo {
   cantidad: number;
 }
 
-/** Datos que el cliente envía al confirmar un pedido. */
+/** Una línea del pedido: qué dulce se pidió y cuántas unidades. */
+export interface LineaPedido {
+  dulce_id: number;
+  cantidad: number;
+}
+
+/**
+ * Cuerpo de `POST /delys/pedido`.
+ * Solo viaja lo que el backend necesita: el precio lo calcula él a partir del
+ * catálogo y la imagen no se manda (puede venir en base64 y Pesarían varios MB).
+ */
 export interface DatosPedido {
   direccion: string;
   telefono: string;
+  /** Día de entrega en `YYYY-MM-DD`, ya en la zona horaria del cliente. */
   fecha: string;
-  horario: string;
   notas: string;
-  encargos: Encargo[];
-  total: number;
-  fechaFormateada: string | null;
-}
-
-export interface FranjaHoraria {
-  valor: string;
-  etiqueta: string;
-  icono: string;
+  encargos: LineaPedido[];
 }
 
 export interface FechaRapida {

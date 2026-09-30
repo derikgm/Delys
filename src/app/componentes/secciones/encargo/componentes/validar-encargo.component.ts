@@ -1,25 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, input, output, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import {
-  DatosPedido,
-  Encargo,
-  FechaRapida,
-  FranjaHoraria,
-} from '../../../../modelos/dulces.modelo';
+import { DatosPedido, Encargo, FechaRapida } from '../../../../modelos/dulces.modelo';
 
 /** Días de anticipación mínimos para aceptar un pedido. */
 const DIAS_MINIMOS = 1;
 
 /** Días de anticipación máximos que se pueden programar. */
 const DIAS_MAXIMOS = 15;
-
-/** Franjas horarias ofrecidas para la entrega. */
-const FRANJAS_HORARIAS: FranjaHoraria[] = [
-  { valor: 'manana', etiqueta: 'Mañana (9am-12pm)', icono: '🌅' },
-  { valor: 'tarde', etiqueta: 'Tarde (12pm-5pm)', icono: '☀️' },
-  { valor: 'noche', etiqueta: 'Noche (5pm-8pm)', icono: '🌙' },
-];
 
 /** Accesos rápidos para elegir fecha de entrega. */
 const FECHAS_RAPIDAS: FechaRapida[] = [
@@ -249,49 +237,6 @@ const FECHAS_RAPIDAS: FechaRapida[] = [
                 }
               </div>
 
-              <!-- Franja horaria -->
-              <div>
-                <span class="text-sm font-medium text-[#4C5D3B] mb-1.5 flex items-center gap-1">
-                  <span>🕐</span> Horario de entrega *
-                </span>
-                <div class="grid grid-cols-2 gap-2">
-                  @for (franja of franjasHorarias; track franja.valor) {
-                    <label
-                      class="relative flex items-center justify-center px-4 py-2.5 rounded-lg border-2
-                             cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]
-                             [&:has(input:checked)]:border-[#4C5D3B] [&:has(input:checked)]:bg-[#C6D3BB]/30
-                             [&:has(input:checked)]:shadow-md border-[#C6D3BB] bg-white/60
-                             hover:border-[#4C5D3B]"
-                      [class.border-[#4C5D3B]]="datos.horario === franja.valor"
-                      [class.bg-[#C6D3BB]/30]="datos.horario === franja.valor"
-                    >
-                      <input
-                        type="radio"
-                        required
-                        [(ngModel)]="datos.horario"
-                        name="horario"
-                        [value]="franja.valor"
-                        class="hidden"
-                      />
-
-                      <span class="flex items-center gap-2 text-sm font-medium text-[#4C5D3B]">
-                        <span>{{ franja.icono }}</span>
-                        {{ franja.etiqueta }}
-                      </span>
-
-                      @if (datos.horario === franja.valor) {
-                        <span
-                          class="absolute -top-2 -right-2 bg-[#4C5D3B] text-white rounded-full w-5 h-5
-                                 flex items-center justify-center text-xs"
-                        >
-                          ✓
-                        </span>
-                      }
-                    </label>
-                  }
-                </div>
-              </div>
-
               <!-- Notas -->
               <div class="pt-3 border-t border-[#C6D3BB]">
                 <label
@@ -314,24 +259,41 @@ const FECHAS_RAPIDAS: FechaRapida[] = [
             </div>
 
             <!-- Acciones -->
+            @if (errorEnvio(); as error) {
+              <p
+                class="flex items-center justify-center gap-2 text-sm text-[#DA4F37]
+                       bg-[#DA4F37]/10 border border-[#DA4F37]/20 p-3 rounded-lg"
+                role="alert"
+              >
+                <span>⚠️</span>
+                {{ error }}
+              </p>
+            }
+
             <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-[#C6D3BB]">
               <button
                 type="button"
                 (click)="cerrar()"
+                [disabled]="enviando()"
                 class="flex-1 px-4 py-2.5 bg-white/80 hover:bg-[#C6D3BB]/30 text-[#4C5D3B]
-                       font-medium rounded-lg transition-all border border-[#C6D3BB] hover:border-[#4C5D3B]"
+                       font-medium rounded-lg transition-all border border-[#C6D3BB] hover:border-[#4C5D3B]
+                       disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                [disabled]="formularioPedido.invalid || fechaInvalida()"
+                [disabled]="formularioPedido.invalid || fechaInvalida() || enviando()"
                 class="flex-1 px-4 py-2.5 bg-[#4C5D3B] hover:bg-[#3A4A2E] text-white font-medium
                        rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed
                        shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span class="flex items-center justify-center gap-2">
-                  <span>🍰</span> Confirmar Pedido
+                  @if (enviando()) {
+                    <span class="animate-spin">⏳</span> Enviando pedido...
+                  } @else {
+                    <span>🍰</span> Confirmar Pedido
+                  }
                 </span>
               </button>
             </div>
@@ -373,10 +335,14 @@ export class ValidarEncargoComponent {
   readonly encargos = input.required<Encargo[]>();
   readonly precioTotal = input.required<number>();
 
+  /** `true` mientras el pedido viaja al backend. */
+  readonly enviando = input(false);
+  /** Mensaje de error del envío, o `null` si no hubo. */
+  readonly errorEnvio = input<string | null>(null);
+
   readonly cerrarDialogo = output<void>();
   readonly pedidoConfirmado = output<DatosPedido>();
 
-  readonly franjasHorarias = FRANJAS_HORARIAS;
   readonly fechasRapidas = FECHAS_RAPIDAS;
 
   readonly diasMinimos = DIAS_MINIMOS;
@@ -388,7 +354,6 @@ export class ValidarEncargoComponent {
     direccion: '',
     telefono: '',
     fecha: '',
-    horario: '',
     notas: '',
   };
 
@@ -448,20 +413,22 @@ export class ValidarEncargoComponent {
   }
 
   enviar(formulario: NgForm): void {
-    if (!formulario.valid || this.fechaInvalida()) {
+    if (!formulario.valid || this.fechaInvalida() || this.enviando()) {
       return;
     }
 
+    // El diálogo no se cierra aquí: lo cierra quien recibe el pedido, y solo si
+    // el backend lo confirma. Así, si falla, el cliente no pierde lo que escribió.
     this.pedidoConfirmado.emit({
-      ...this.datos,
-      encargos: this.encargos(),
-      total: this.precioTotal(),
-      fechaFormateada: this.datos.fecha
-        ? new DatePipe('es').transform(this.datos.fecha, 'dd/MM/yyyy')
-        : null,
+      direccion: this.datos.direccion.trim(),
+      telefono: this.datos.telefono.trim(),
+      fecha: this.datos.fecha,
+      notas: this.datos.notas.trim(),
+      encargos: this.encargos().map((encargo) => ({
+        dulce_id: encargo.dulce.id,
+        cantidad: encargo.cantidad,
+      })),
     });
-
-    this.cerrar();
   }
 }
 

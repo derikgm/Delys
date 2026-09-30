@@ -73,7 +73,7 @@
             <button
               type="button"
               (click)="abrirDialogo()"
-              [disabled]="errorValidacion() !== null"
+              [disabled]="errorValidacion() !== null || enviandoPedido()"
               [title]="errorValidacion() ?? ''"
               class="bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -94,9 +94,22 @@
     <app-validar-encargo
       [encargos]="encargos()"
       [precioTotal]="precioTotal()"
+      [enviando]="enviandoPedido()"
+      [errorEnvio]="errorPedido()"
       (cerrarDialogo)="cerrarDialogo()"
       (pedidoConfirmado)="confirmarPedido($event)"
     />
+  }
+
+  <!-- Confirmación de que el pedido llegó al backend -->
+  @if (pedidoEnviado()) {
+    <p
+      class="mt-8 mx-auto max-w-2xl flex items-center justify-center gap-2 text-center bg-white border-2 border-green-500 text-green-800 font-medium px-6 py-4 rounded-lg shadow"
+      role="status"
+    >
+      <span>✅</span>
+      ¡Pedido enviado! Te contactaremos para confirmar la entrega.
+    </p>
   }
 </section>
 
