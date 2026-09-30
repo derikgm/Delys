@@ -393,10 +393,10 @@ export class ValidarEncargoComponent {
   };
 
   /** Fecha más próxima que se puede elegir (mañana). */
-  readonly fechaMinima = computed(() => this.aIso(FechaConDiasDesdeHoy(DIAS_MINIMOS)));
+  readonly fechaMinima = computed(() => aIso(fechaConDiasDesdeHoy(DIAS_MINIMOS)));
 
   /** Fecha límite para programar la entrega. */
-  readonly fechaMaxima = computed(() => this.aIso(FechaConDiasDesdeHoy(DIAS_MAXIMOS)));
+  readonly fechaMaxima = computed(() => aIso(fechaConDiasDesdeHoy(DIAS_MAXIMOS)));
 
   /** Suma precio × cantidad de un encargo. */
   totalDe(encargo: Encargo): number {
@@ -419,7 +419,7 @@ export class ValidarEncargoComponent {
   }
 
   seleccionarFechaRapida(dias: number, campo: HTMLInputElement): void {
-    const fecha = this.aIso(FechaConDiasDesdeHoy(dias));
+    const fecha = aIso(fechaConDiasDesdeHoy(dias));
 
     this.datos.fecha = fecha;
     campo.value = fecha;
@@ -433,14 +433,12 @@ export class ValidarEncargoComponent {
       return;
     }
 
-    const elegida = this.alInicioDelDia(new Date(this.datos.fecha));
-    const manana = this.alInicioDelDia(FechaConDiasDesdeHoy(DIAS_MINIMOS));
-    const limite = this.alInicioDelDia(FechaConDiasDesdeHoy(DIAS_MAXIMOS));
+    const elegida = desdeIso(this.datos.fecha);
 
-    if (elegida < manana) {
+    if (elegida < fechaConDiasDesdeHoy(DIAS_MINIMOS)) {
       this.fechaInvalida.set(true);
       this.mensajeError.set('❌ No puedes seleccionar una fecha anterior a mañana');
-    } else if (elegida > limite) {
+    } else if (elegida > fechaConDiasDesdeHoy(DIAS_MAXIMOS)) {
       this.fechaInvalida.set(true);
       this.mensajeError.set('❌ Solo puedes programar entregas con 15 días de anticipación');
     } else {
@@ -465,21 +463,32 @@ export class ValidarEncargoComponent {
 
     this.cerrar();
   }
-
-  private alInicioDelDia(fecha: Date): Date {
-    const copia = new Date(fecha);
-    copia.setHours(0, 0, 0, 0);
-    return copia;
-  }
-
-  private aIso(fecha: Date): string {
-    return fecha.toISOString().split('T')[0];
-  }
 }
 
-/** Devuelve la fecha de hoy sumando la cantidad de días indicada. */
-function FechaConDiasDesdeHoy(dias: number): Date {
+/** Devuelve, a medianoche local, la fecha de hoy sumando la cantidad de días indicada. */
+function fechaConDiasDesdeHoy(dias: number): Date {
   const fecha = new Date();
+  fecha.setHours(0, 0, 0, 0);
   fecha.setDate(fecha.getDate() + dias);
   return fecha;
+}
+
+/**
+ * Convierte una fecha a `YYYY-MM-DD` con su calendario local.
+ * No se usa `toISOString()` porque devuelve la fecha en UTC, que en zonas como
+ * Cuba (UTC-5) puede adelantar o atrasar un día respecto a la fecha del usuario.
+ */
+function aIso(fecha: Date): string {
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const dia = String(fecha.getDate()).padStart(2, '0');
+  return `${fecha.getFullYear()}-${mes}-${dia}`;
+}
+
+/**
+ * Lee un `YYYY-MM-DD` como fecha local.
+ * `new Date(texto)` lo interpretaría como medianoche UTC y en Cuba saltaría al día anterior.
+ */
+function desdeIso(iso: string): Date {
+  const [anio, mes, dia] = iso.split('-').map(Number);
+  return new Date(anio, mes - 1, dia);
 }

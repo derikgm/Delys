@@ -1,14 +1,25 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { describe, expect, it, beforeEach } from 'vitest';
 
 import { App } from './app';
 import { rutas } from './app.routes';
 import { ServicioEncargos } from './servicios/encargo.servicio';
-import { obtenerUrlImagen, esModoDesarrollo } from './comunes/imagenes';
+import { obtenerUrlImagen, esModoDesarrollo, resolverImagenDulce } from './comunes/imagenes';
 import { contactoLink, mensajeContacto, numeroContacto } from './datos/contacto';
+import { DulceCatalogo } from './modelos/dulces.modelo';
+import { ValidarEncargoComponent } from './componentes/secciones/encargo/componentes/validar-encargo.component';
+
+/** Fecha en `YYYY-MM-DD` tal como la ve el usuario, usando su calendario local. */
+function isoLocal(dias: number): string {
+  const fecha = new Date();
+  fecha.setDate(fecha.getDate() + dias);
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const dia = String(fecha.getDate()).padStart(2, '0');
+  return `${fecha.getFullYear()}-${mes}-${dia}`;
+}
 
 /**
  * Prueba de humo: monta la aplicación completa.
@@ -117,5 +128,186 @@ describe('datos de contacto', () => {
   it('codifica los espacios del mensaje para no romper la URL', () => {
     expect(contactoLink).not.toContain(' ');
     expect(decodeURIComponent(contactoLink.split('text=')[1])).toBe(mensajeContacto);
+  });
+});
+
+describe('resolverImagenDulce', () => {
+  const dulce: DulceCatalogo = {
+    id: 1,
+    nombre: 'Charolas surtida',
+    precio: 1000,
+    imagen_url: null,
+    imagen_bytes: null,
+  };
+
+  it('usa imagen_url cuando el backend la envía', () => {
+    const resultado = resolverImagenDulce({
+      ...dulce,
+      imagen_url: 'https://ejemplo.com/charolas.jpg',
+      imagen_bytes: 'aW1hZ2Vu',
+    });
+
+    expect(resultado).toBe('https://ejemplo.com/charolas.jpg');
+  });
+
+  it('reconstruye la imagen con los bytes en base64 cuando no hay url', () => {
+    const resultado = resolverImagenDulce({ ...dulce, imagen_bytes: 'aW1hZ2Vu' });
+
+    expect(resultado).toBe('data:image/jpeg;base64,aW1hZ2Vu');
+  });
+
+  it('no duplica el prefijo si los bytes ya vienen como data URI', () => {
+    const resultado = resolverImagenDulce({
+      ...dulce,
+      imagen_bytes: 'data:image/png;base64,aW1hZ2Vu',
+    });
+
+    expect(resultado).toBe('data:image/png;base64,aW1hZ2Vu');
+  });
+
+  it('recurre al archivo de assets cuando el backend no manda ninguna imagen', () => {
+    expect(resolverImagenDulce(dulce)).toBe(obtenerUrlImagen('Charolas surtida'));
+  });
+
+  it('ignora url y bytes vacíos', () => {
+    const resultado = resolverImagenDulce({ ...dulce, imagen_url: '  ', imagen_bytes: '' });
+
+    expect(resultado).toBe(obtenerUrlImagen('Charolas surtida'));
+  });
+});
+
+describe('ServicioEncargos.init con el payload del backend', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
+  });
+
+  it('pide el endpoint de dulces y guarda el catálogo con la imagen resuelta', () => {
+    const servicio = TestBed.inject(ServicioEncargos);
+    const ctrl = TestBed.inject(HttpTestingController);
+
+    servicio.init();
+
+    const peticion = ctrl.expectOne((r) => r.url.endsWith('/dulces'));
+    expect(peticion.request.method).toBe('GET');
+
+    peticion.flush({
+      dulces: [
+        {
+          id: 1,
+          nombre: 'Charolas surtida',
+          precio: 1000,
+          imagen_url: 'https://ejemplo.com/charolas.jpg',
+          imagen_bytes: null,
+        },
+      ],
+    });
+
+    expect(servicio.tiposDeDulces()).toEqual([
+      {
+        id: 1,
+        nombre: 'Charolas surtida',
+        precio: 1000,
+        imagen: 'https://ejemplo.com/charolas.jpg',
+      },
+    ]);
+    expect(servicio.cargandoDulces()).toBe(false);
+  });
+
+  it('deja el catálogo vacío y apaga el indicador si la respuesta no trae dulces', () => {
+    const servicio = TestBed.inject(ServicioEncargos);
+    const ctrl = TestBed.inject(HttpTestingController);
+
+    servicio.init();
+    ctrl.expectOne((r) => r.url.endsWith('/dulces')).flush({});
+
+    expect(servicio.tiposDeDulces()).toEqual([]);
+    expect(servicio.cargandoDulces()).toBe(false);
+  });
+});
+
+/**
+ * Estas pruebas deben correr con la zona horaria del usuario, no en UTC.
+ * Con `TZ=America/Havana npm test` cubren el caso real del sitio.
+ */
+describe('ValidarEncargoComponent - fechas locales', () => {
+  function crearComponente(): ValidarEncargoComponent {
+    const fixture = TestBed.createComponent(ValidarEncargoComponent);
+    fixture.componentRef.setInput('encargos', []);
+    fixture.componentRef.setInput('precioTotal', 0);
+    return fixture.componentInstance;
+  }
+
+  function elegir(component: ValidarEncargoComponent, iso: string): void {
+    component.datos.fecha = iso;
+    component.validarFecha();
+  }
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [ValidarEncargoComponent] });
+  });
+
+  it('ofrece como mínimo mañana y como máximo dentro de 15 días', () => {
+    const componente = crearComponente();
+
+    expect(componente.fechaMinima()).toBe(isoLocal(1));
+    expect(componente.fechaMaxima()).toBe(isoLocal(15));
+  });
+
+  it('acepta la fecha mínima que el propio campo ofrece', () => {
+    const componente = crearComponente();
+
+    elegir(componente, componente.fechaMinima());
+
+    expect(componente.fechaInvalida()).toBe(false);
+    expect(componente.mensajeError()).toBe('');
+  });
+
+  it('acepta la fecha máxima', () => {
+    const componente = crearComponente();
+
+    elegir(componente, componente.fechaMaxima());
+
+    expect(componente.fechaInvalida()).toBe(false);
+  });
+
+  it('acepta una fecha del medio del rango', () => {
+    const componente = crearComponente();
+
+    elegir(componente, isoLocal(7));
+
+    expect(componente.fechaInvalida()).toBe(false);
+  });
+
+  it('rechaza hoy y cualquier fecha anterior', () => {
+    const componente = crearComponente();
+
+    elegir(componente, isoLocal(0));
+    expect(componente.fechaInvalida()).toBe(true);
+    expect(componente.mensajeError()).toContain('anterior a mañana');
+
+    elegir(componente, isoLocal(-3));
+    expect(componente.fechaInvalida()).toBe(true);
+  });
+
+  it('rechaza más de 15 días de anticipación', () => {
+    const componente = crearComponente();
+
+    elegir(componente, isoLocal(16));
+
+    expect(componente.fechaInvalida()).toBe(true);
+    expect(componente.mensajeError()).toContain('15 días');
+  });
+
+  it('las fechas rápidas elegidas pasan la validación', () => {
+    const componente = crearComponente();
+    const campo = document.createElement('input');
+
+    for (const dias of [2, 3, 7]) {
+      componente.seleccionarFechaRapida(dias, campo);
+      expect(componente.fechaInvalida()).toBe(false);
+      expect(componente.datos.fecha).toBe(isoLocal(dias));
+    }
   });
 });

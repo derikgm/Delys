@@ -1,3 +1,18 @@
+/**
+ * Un dulce tal como lo devuelve `GET /delys/dulces`.
+ * Las propiedades van en `snake_case` porque es el nombre que usa el backend.
+ */
+export interface DulceCatalogo {
+  id: number;
+  precio: number;
+  nombre: string;
+  /** Dirección de la imagen. El backend puede enviarla como `null`. */
+  imagen_url: string | null;
+  /** Imagen en base64, para cuando no hay dónde alojarla. Puede ser `null`. */
+  imagen_bytes: string | null;
+}
+
+/** Dulce ya preparado para las vistas, con la imagen resuelta. */
 export interface Dulce {
   id: number;
   precio: number;
