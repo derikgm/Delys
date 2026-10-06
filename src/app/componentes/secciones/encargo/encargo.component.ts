@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { provideIcons, NgIcon } from '@ng-icons/core';
 import { matAdd } from '@ng-icons/material-icons/baseline';
 import { IndicadorCargaComponent } from '../../../comunes/indicador-carga.component';
+import { monedaDeLaSuma } from '../../../comunes/moneda';
 import { DatosPedido, Dulce } from '../../../modelos/dulces.modelo';
 import { ServicioEncargos } from '../../../servicios/encargo.servicio';
 import { TarjetaEncargoComponent } from './componentes/tarjeta-encargo.component';
@@ -41,6 +42,11 @@ export class EncargoComponent {
   /** Suma de todos los dulces × cantidad. */
   readonly precioTotal = computed(() =>
     this.encargos().reduce((total, encargo) => total + encargo.dulce.precio * encargo.cantidad, 0),
+  );
+
+  /** Lo que se escribe junto al total: su moneda, o el aviso si se mezclan. */
+  readonly monedaTotal = computed(() =>
+    monedaDeLaSuma(this.encargos().map((encargo) => encargo.dulce.moneda)),
   );
 
   /** Dulce del encargo que se está editando en el selector, si hay alguno. */

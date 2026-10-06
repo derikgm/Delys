@@ -6,6 +6,8 @@ export interface DulceCatalogo {
   id: number;
   precio: number;
   nombre: string;
+  /** Moneda del precio (`CUP`, `USD`…). Texto corto, no un enum: puede haber más. */
+  moneda: string;
   /** Dirección de la imagen. El backend puede enviarla como `null`. */
   imagen_url: string | null;
   /** Imagen en base64, para cuando no hay dónde alojarla. Puede ser `null`. */
@@ -17,6 +19,8 @@ export interface Dulce {
   id: number;
   precio: number;
   nombre: string;
+  /** Moneda del precio. Ya normalizada: `aDulceVisible()` pone `CUP` si no llega. */
+  moneda: string;
   rebaja?: number;
   imagen?: string;
 }

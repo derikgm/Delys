@@ -108,6 +108,9 @@ export class ServicioEncargos {
       id: dulce.id,
       nombre: dulce.nombre,
       precio: dulce.precio,
+      // Si el servidor estuviera en una versión anterior a la columna (punto 5)
+      // no mandaría moneda: se pinta `CUP`, que es como se veía hasta ahora.
+      moneda: dulce.moneda || 'CUP',
       imagen: resolverImagenDulce(dulce),
     };
   }

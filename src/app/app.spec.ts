@@ -63,8 +63,8 @@ describe('ServicioEncargos', () => {
   it('agrega un encargo con el primer dulce y la cantidad 1', () => {
     const servicio = TestBed.inject(ServicioEncargos);
     servicio.tiposDeDulces.set([
-      { id: 1, nombre: 'Charolas surtida', precio: 1000 },
-      { id: 2, nombre: 'Panetela', precio: 3500 },
+      { id: 1, nombre: 'Charolas surtida', precio: 1000, moneda: 'CUP' },
+      { id: 2, nombre: 'Panetela', precio: 3500, moneda: 'CUP' },
     ]);
 
     servicio.agregarEncargo();
@@ -74,7 +74,7 @@ describe('ServicioEncargos', () => {
 
   it('cambia la cantidad de un encargo por su índice', () => {
     const servicio = TestBed.inject(ServicioEncargos);
-    servicio.tiposDeDulces.set([{ id: 1, nombre: 'Charolas surtida', precio: 1000 }]);
+    servicio.tiposDeDulces.set([{ id: 1, nombre: 'Charolas surtida', precio: 1000, moneda: 'CUP' }]);
     servicio.agregarEncargo();
     servicio.agregarEncargo();
 
@@ -95,7 +95,7 @@ describe('ServicioEncargos', () => {
 
   it('elimina el encargo indicado', () => {
     const servicio = TestBed.inject(ServicioEncargos);
-    servicio.tiposDeDulces.set([{ id: 1, nombre: 'Charolas', precio: 1000 }]);
+    servicio.tiposDeDulces.set([{ id: 1, nombre: 'Charolas', precio: 1000, moneda: 'CUP' }]);
     servicio.agregarEncargo();
     servicio.agregarEncargo();
 
@@ -137,6 +137,7 @@ describe('resolverImagenDulce', () => {
     id: 1,
     nombre: 'Charolas surtida',
     precio: 1000,
+    moneda: 'CUP',
     imagen_url: null,
     imagen_bytes: null,
   };
@@ -314,7 +315,7 @@ describe('ValidarEncargoComponent - fechas locales', () => {
 
   it('emite solo los campos que pide el backend, sin horario ni total', () => {
     const componente = crearComponente([
-      { dulce: { id: 1, nombre: 'Charolas', precio: 1000 }, cantidad: 2 },
+      { dulce: { id: 1, nombre: 'Charolas', precio: 1000, moneda: 'CUP' }, cantidad: 2 },
     ]);
 
     componente.datos.direccion = '  Calle 23  ';
@@ -393,7 +394,7 @@ describe('ServicioEncargos.enviarPedido', () => {
     const servicio = TestBed.inject(ServicioEncargos);
     const ctrl = TestBed.inject(HttpTestingController);
 
-    servicio.tiposDeDulces.set([{ id: 1, nombre: 'Charolas', precio: 1000 }]);
+    servicio.tiposDeDulces.set([{ id: 1, nombre: 'Charolas', precio: 1000, moneda: 'CUP' }]);
     servicio.agregarEncargo();
     servicio.enviarPedido(pedido);
 
@@ -408,7 +409,7 @@ describe('ServicioEncargos.enviarPedido', () => {
     const servicio = TestBed.inject(ServicioEncargos);
     const ctrl = TestBed.inject(HttpTestingController);
 
-    servicio.tiposDeDulces.set([{ id: 1, nombre: 'Charolas', precio: 1000 }]);
+    servicio.tiposDeDulces.set([{ id: 1, nombre: 'Charolas', precio: 1000, moneda: 'CUP' }]);
     servicio.agregarEncargo();
     servicio.enviarPedido(pedido);
 

@@ -96,11 +96,15 @@ import { ServicioEncargos } from '../../../../servicios/encargo.servicio';
         <div class="flex items-center justify-between pt-3 border-t border-gray-100">
           <div class="flex items-center gap-2">
             <span class="text-sm text-gray-500">Precio unitario:</span>
-            <span class="font-semibold text-delys-primary">{{ encargo().dulce.precio }} CUP</span>
+            <span class="font-semibold text-delys-primary">
+              {{ encargo().dulce.precio }} {{ encargo().dulce.moneda }}
+            </span>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-sm text-gray-500">Total:</span>
-            <span class="font-bold text-delys-primary text-lg"> {{ total() }} CUP </span>
+            <span class="font-bold text-delys-primary text-lg">
+              {{ total() }} {{ encargo().dulce.moneda }}
+            </span>
           </div>
         </div>
 

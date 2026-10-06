@@ -109,7 +109,9 @@ import { ServicioEncargos } from '../../../../servicios/encargo.servicio';
 
                   <div class="p-3">
                     <h3 class="font-semibold text-gray-800 text-sm truncate">{{ dulce.nombre }}</h3>
-                    <p class="text-delys-primary font-bold text-sm mt-1">{{ dulce.precio }} CUP</p>
+                    <p class="text-delys-primary font-bold text-sm mt-1">
+                      {{ dulce.precio }} {{ dulce.moneda }}
+                    </p>
                   </div>
                 </button>
               }

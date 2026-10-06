@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, input, output, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
+import { monedaDeLaSuma } from '../../../../comunes/moneda';
 import { DatosPedido, Encargo, FechaRapida } from '../../../../modelos/dulces.modelo';
 
 /** Días de anticipación mínimos para aceptar un pedido. */
@@ -75,13 +76,15 @@ const FECHAS_RAPIDAS: FechaRapida[] = [
                 >
                   <span class="text-[#4C5D3B] font-medium">{{ encargo.dulce.nombre }}</span>
                   <p class="font-semibold text-[#DA4F37]">
-                    x{{ encargo.cantidad }} | {{ totalDe(encargo) }} CUP
+                    x{{ encargo.cantidad }} | {{ totalDe(encargo) }} {{ encargo.dulce.moneda }}
                   </p>
                 </div>
               }
             </div>
             <div class="mt-3 text-right">
-              <span class="text-lg font-bold text-[#DA4F37]">Total: {{ precioTotal() }} CUP</span>
+              <span class="text-lg font-bold text-[#DA4F37]">
+                Total: {{ precioTotal() }} {{ monedaTotal() }}
+              </span>
             </div>
           </div>
 
@@ -334,6 +337,11 @@ const FECHAS_RAPIDAS: FechaRapida[] = [
 export class ValidarEncargoComponent {
   readonly encargos = input.required<Encargo[]>();
   readonly precioTotal = input.required<number>();
+
+  /** Lo que se escribe junto al total: su moneda, o el aviso si se mezclan. */
+  readonly monedaTotal = computed(() =>
+    monedaDeLaSuma(this.encargos().map((encargo) => encargo.dulce.moneda)),
+  );
 
   /** `true` mientras el pedido viaja al backend. */
   readonly enviando = input(false);
