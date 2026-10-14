@@ -30,6 +30,41 @@ export interface Encargo {
   cantidad: number;
 }
 
+/** Un renglón de un combo: el nombre del dulce y cuántas unidades lleva. */
+export interface DulceCombo {
+  nombre_dulce: string;
+  cantidad: number;
+}
+
+/**
+ * Un combo tal como lo devuelve `GET /delys/combos`.
+ *
+ * Los dulces del combo se guardan por **nombre** (no por id): puede ser un dulce
+ * del catálogo o uno escrito a mano que no se dio de alta.
+ */
+export interface ComboCatalogo {
+  id: number;
+  nombre_combo: string;
+  precio: number;
+  /** Moneda del precio (`CUP`, `USD`…). Texto corto, no un enum. */
+  moneda: string;
+  /** Dirección de la imagen; `null` si todavía no tiene foto. */
+  imagen_url: string | null;
+  dulces: DulceCombo[];
+}
+
+/** Combo ya preparado para las vistas, con la imagen resuelta. */
+export interface Combo {
+  id: number;
+  nombre_combo: string;
+  precio: number;
+  /** Moneda del precio. Ya normalizada: se pone `CUP` si el servidor no la manda. */
+  moneda: string;
+  /** Imagen resuelta, o `undefined` si el combo no tiene foto. */
+  imagen?: string;
+  dulces: DulceCombo[];
+}
+
 /** Una línea del pedido: qué dulce se pidió y cuántas unidades. */
 export interface LineaPedido {
   dulce_id: number;

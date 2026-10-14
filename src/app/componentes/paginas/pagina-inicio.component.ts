@@ -4,6 +4,7 @@ import { ContactoComponent } from '../secciones/contacto.component';
 import { EncargoComponent } from '../secciones/encargo/encargo.component';
 import { CarruselComponent } from '../carrusel.component';
 import { ProductosComponent } from '../productos/productos.component';
+import { CombosComponent } from '../combos/combos.component';
 import { ServicioEncargos } from '../../servicios/encargo.servicio';
 
 @Component({
@@ -15,6 +16,7 @@ import { ServicioEncargos } from '../../servicios/encargo.servicio';
     ContactoComponent,
     CarruselComponent,
     ProductosComponent,
+    CombosComponent,
   ],
   template: `
     <section id="carrusel">
@@ -23,6 +25,10 @@ import { ServicioEncargos } from '../../servicios/encargo.servicio';
 
     <section id="productos">
       <app-productos />
+    </section>
+
+    <section id="combos">
+      <app-combos />
     </section>
 
     <section id="encargo">

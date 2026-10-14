@@ -8,6 +8,7 @@ import { NgForm } from '@angular/forms';
 import { App } from './app';
 import { rutas } from './app.routes';
 import { ServicioEncargos } from './servicios/encargo.servicio';
+import { ServicioCombos } from './servicios/combos.servicio';
 import { obtenerUrlImagen, esModoDesarrollo, resolverImagenDulce } from './comunes/imagenes';
 import { contactoLink, mensajeContacto, numeroContacto } from './datos/contacto';
 import { DatosPedido, DulceCatalogo, Encargo } from './modelos/dulces.modelo';
@@ -211,6 +212,7 @@ describe('ServicioEncargos.init con el payload del backend', () => {
         id: 1,
         nombre: 'Charolas surtida',
         precio: 1000,
+        moneda: 'CUP',
         imagen: 'https://ejemplo.com/charolas.jpg',
       },
     ]);
@@ -226,6 +228,80 @@ describe('ServicioEncargos.init con el payload del backend', () => {
 
     expect(servicio.tiposDeDulces()).toEqual([]);
     expect(servicio.cargandoDulces()).toBe(false);
+  });
+});
+
+describe('ServicioCombos.init con el payload del backend', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
+  });
+
+  it('pide el endpoint de combos y guarda los combos con la imagen resuelta', () => {
+    const servicio = TestBed.inject(ServicioCombos);
+    const ctrl = TestBed.inject(HttpTestingController);
+
+    servicio.init();
+
+    const peticion = ctrl.expectOne((r) => r.url.endsWith('/combos'));
+    expect(peticion.request.method).toBe('GET');
+
+    peticion.flush({
+      combos: [
+        {
+          id: 3,
+          nombre_combo: 'Combo familiar',
+          precio: 2500,
+          moneda: 'CUP',
+          imagen_url: 'https://ejemplo.com/combo.jpg',
+          dulces: [
+            { nombre_dulce: 'Charolas surtida', cantidad: 2 },
+            { nombre_dulce: 'Dulce secreto', cantidad: 1 },
+          ],
+        },
+      ],
+    });
+
+    expect(servicio.combos()).toEqual([
+      {
+        id: 3,
+        nombre_combo: 'Combo familiar',
+        precio: 2500,
+        moneda: 'CUP',
+        imagen: 'https://ejemplo.com/combo.jpg',
+        dulces: [
+          { nombre_dulce: 'Charolas surtida', cantidad: 2 },
+          { nombre_dulce: 'Dulce secreto', cantidad: 1 },
+        ],
+      },
+    ]);
+    expect(servicio.cargandoCombos()).toBe(false);
+  });
+
+  it('deja la lista vacía y apaga el indicador si la respuesta no trae combos', () => {
+    const servicio = TestBed.inject(ServicioCombos);
+    const ctrl = TestBed.inject(HttpTestingController);
+
+    servicio.init();
+    ctrl.expectOne((r) => r.url.endsWith('/combos')).flush({});
+
+    expect(servicio.combos()).toEqual([]);
+    expect(servicio.cargandoCombos()).toBe(false);
+  });
+
+  it('un combo sin foto queda con imagen undefined', () => {
+    const servicio = TestBed.inject(ServicioCombos);
+    const ctrl = TestBed.inject(HttpTestingController);
+
+    servicio.init();
+    ctrl.expectOne((r) => r.url.endsWith('/combos')).flush({
+      combos: [
+        { id: 1, nombre_combo: 'Sin foto', precio: 10, moneda: 'CUP', imagen_url: null, dulces: [] },
+      ],
+    });
+
+    expect(servicio.combos()[0].imagen).toBeUndefined();
   });
 });
 

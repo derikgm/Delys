@@ -68,6 +68,7 @@ export class EncabezadoComponent {
 
   readonly enlacesMenu: EnlaceMenu[] = [
     { id: 'productos', etiqueta: 'Productos' },
+    { id: 'combos', etiqueta: 'Combos' },
     { id: 'encargo', etiqueta: 'Encargue su dulce' },
     { id: 'radicamos', etiqueta: 'Lugar' },
     { id: 'contacto', etiqueta: 'Contacto' },

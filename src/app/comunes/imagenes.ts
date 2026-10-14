@@ -1,4 +1,4 @@
-import { DulceCatalogo } from '../modelos/dulces.modelo';
+import { ComboCatalogo, DulceCatalogo } from '../modelos/dulces.modelo';
 
 /** Dominio de GitHub Pages donde se publica el sitio. */
 const DOMINIO_PUBLICACION = 'derikgm.github.io';
@@ -48,4 +48,14 @@ export function resolverImagenDulce(dulce: DulceCatalogo): string {
   }
 
   return obtenerUrlImagen(dulce.nombre);
+}
+
+/**
+ * Imagen de un combo. A diferencia de los dulces, un combo no tiene un archivo
+ * de `src/assets` que haga de respaldo, así que si el servidor no manda
+ * `imagen_url` se devuelve `undefined` y la tarjeta pinta su hueco.
+ */
+export function resolverImagenCombo(combo: ComboCatalogo): string | undefined {
+  const url = combo.imagen_url?.trim();
+  return url ? url : undefined;
 }
